@@ -1,8 +1,9 @@
 package com.vargasgabriel.chatcleanarchitecture.feature.chatList.domain
 
 import com.vargasgabriel.chatcleanarchitecture.data.ChatRepository
+import javax.inject.Inject
 
-class ChatListUseCaseImpl(
+class ChatListUseCaseImpl @Inject constructor(
     private val chatRepository: ChatRepository
 ) : ChatListUseCase {
 
