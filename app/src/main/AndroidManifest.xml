@@ -11,6 +11,7 @@
         android:theme="@style/Theme.ChatCleanArchitecture">
         <activity
             android:name=".feature.MainActivity"
+            android:theme="@style/Theme.ChatCleanArchitecture.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
