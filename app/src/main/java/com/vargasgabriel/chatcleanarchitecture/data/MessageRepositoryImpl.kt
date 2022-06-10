@@ -4,8 +4,9 @@ import com.vargasgabriel.chatcleanarchitecture.data.source.MessageDataSource
 import com.vargasgabriel.chatcleanarchitecture.data.source.local.message.MessageEntity
 import com.vargasgabriel.chatcleanarchitecture.feature.chat.domain.Message
 import com.vargasgabriel.chatcleanarchitecture.feature.chatList.domain.Chat
+import javax.inject.Inject
 
-class MessageRepositoryMemoryImpl(
+class MessageRepositoryImpl @Inject constructor(
     private val localDataSource: MessageDataSource.Local
 ) : MessageRepository {
 

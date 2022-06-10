@@ -2,8 +2,9 @@ package com.vargasgabriel.chatcleanarchitecture.data.source.local.chat
 
 import com.vargasgabriel.chatcleanarchitecture.data.source.ChatDataSource
 import com.vargasgabriel.chatcleanarchitecture.feature.chatList.domain.Chat
+import javax.inject.Inject
 
-class ChatLocalDataSourceMemoryImpl : ChatDataSource.Local {
+class ChatLocalDataSourceMemoryImpl @Inject constructor() : ChatDataSource.Local {
 
     private var key = 0
     private val chats: MutableMap<Int, ChatEntity> = mutableMapOf()

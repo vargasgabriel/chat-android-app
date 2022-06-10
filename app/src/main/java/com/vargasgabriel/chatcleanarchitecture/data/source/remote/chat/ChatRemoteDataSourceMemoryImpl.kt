@@ -3,8 +3,9 @@ package com.vargasgabriel.chatcleanarchitecture.data.source.remote.chat
 import com.vargasgabriel.chatcleanarchitecture.data.source.ChatDataSource
 import com.vargasgabriel.chatcleanarchitecture.data.source.local.chat.ChatEntity
 import com.vargasgabriel.chatcleanarchitecture.feature.chatList.domain.Chat
+import javax.inject.Inject
 
-class ChatRemoteDataSourceMemoryImpl : ChatDataSource.Remote {
+class ChatRemoteDataSourceMemoryImpl @Inject constructor() : ChatDataSource.Remote {
 
     private val chats: MutableMap<String, ChatEntity> = mutableMapOf()
 
