@@ -4,7 +4,11 @@ data class ChatViewState(
     val name: String,
     val img: String, // URL
 //    val lastMessage: String,
-)
+) {
+    override fun toString(): String {
+        return "ChatViewState(name='$name', img='$img')"
+    }
+}
 
 sealed class ChatListViewState {
     object Loading : ChatListViewState()

@@ -1,6 +1,7 @@
 package com.vargasgabriel.chatcleanarchitecture.feature.chatList.presenter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +9,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.vargasgabriel.chatcleanarchitecture.data.source.local.chat.ChatLocalDataSourceMemoryImpl
-import com.vargasgabriel.chatcleanarchitecture.data.source.remote.chat.ChatRemoteDataSourceMemoryImpl
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.vargasgabriel.chatcleanarchitecture.databinding.ChatListFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -21,24 +21,15 @@ class ChatListFragment : Fragment() {
     private var _binding: ChatListFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val _viewModel: ChatListViewModel by viewModels()
+    private val viewModel: ChatListViewModel by viewModels()
 
-    private val adapter = ChatListAdapter(::onChatClicked)
+    private val chatListAdapter = ChatListAdapter(::onChatClicked)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _viewModel = ViewModelProvider(
-            this,
-            ChatListViewModelFactory(
-                chatLocalDataSource = ChatLocalDataSourceMemoryImpl(),
-                chatRemoteDataSource = ChatRemoteDataSourceMemoryImpl()
-            )
-        ).get(ChatListViewModel::class.java)
-
         _binding = ChatListFragmentBinding.inflate(
             layoutInflater,
             container,
@@ -56,13 +47,18 @@ class ChatListFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupList()
+    }
+
     private fun updateUI(viewState: ChatListViewState) {
         when (viewState) {
             is ChatListViewState.Content -> {
                 binding.viewChatList.isVisible = true
                 binding.errorView.isVisible = false
                 binding.loadingView.isVisible = false
-                adapter.submitList(viewState.chats)
+                chatListAdapter.submitList(viewState.chats)
             }
             ChatListViewState.Error -> {
                 binding.viewChatList.isVisible = false
@@ -77,8 +73,22 @@ class ChatListFragment : Fragment() {
         }
     }
 
-    // parameter just to show how to retrieve data from Adapter to the fragment
-    private fun onChatClicked(viewState: ChatViewState) {
+    private fun setupList() {
+        binding.viewChatList.apply {
+            adapter = chatListAdapter
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        }
+    }
+
+    private fun onChatClicked(position: Int) {
+        val chatViewState = chatListAdapter.currentList[position]
+        Snackbar.make(binding.root, "click $position", Snackbar.LENGTH_SHORT).show()
+        Log.d(javaClass.name, "position: $position => $chatViewState")
+
 //        findNavController().navigate(ProductListFragmentDirections.actionProductListFragmentToProductDetailsFragment())
     }
 }

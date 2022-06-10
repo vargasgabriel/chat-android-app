@@ -1,15 +1,16 @@
 package com.vargasgabriel.chatcleanarchitecture.feature.chatList.presenter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vargasgabriel.chatcleanarchitecture.databinding.ChatViewHolderBinding
 
+typealias OnChatClicked = (position: Int) -> Unit
+
 class ChatListAdapter(
-    val onChatClicked: (ChatViewState) -> Unit,
+    private val onChatClicked: OnChatClicked,
 ) : ListAdapter<ChatViewState, ChatListAdapter.ViewHolder>(diffCallback) {
 
     companion object {
@@ -28,20 +29,31 @@ class ChatListAdapter(
         }
     }
 
-    inner class ViewHolder(private val _binding: ChatViewHolderBinding) : RecyclerView.ViewHolder(_binding.root) {
+    inner class ViewHolder(
+        private val binding: ChatViewHolderBinding,
+        private val onChatClicked: OnChatClicked
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+                onChatClicked.invoke(adapterPosition)
+            }
+        }
 
         fun bind(chatViewState: ChatViewState) {
-            _binding.root.setOnClickListener {
-                onChatClicked.invoke(chatViewState)
-            }
-            _binding.title.text = chatViewState.name
+            binding.title.text = chatViewState.name
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ChatViewHolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ChatViewHolderBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ),
+            onChatClicked
         )
     }
 
